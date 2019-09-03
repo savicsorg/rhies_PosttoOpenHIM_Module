@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.openmrs.maven.parents</groupId>
+        <artifactId>maven-parent-openmrs-module</artifactId>
+        <version>1.1.1</version>
+    </parent>
+
+    <groupId>org.openmrs.module</groupId>
+    <artifactId>posttoopenhim</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>Post to OpenHIM</name>
+    <description>Post saved patients and encounters to openHIM</description>
+
+    <url>https://wiki.openmrs.org/x/FQ4z</url>
+
+    <scm>
+        <connection>scm:git:git@github.com:openmrs/openmrs-module-posttoopenhim.git</connection>
+        <developerConnection>scm:git:git@github.com:openmrs/openmrs-module-posttoopenhim.git</developerConnection>
+        <url>https://github.com/openmrs/openmrs-module-posttoopenhim/</url>
+    </scm>
+
+    <modules>
+        <module>api</module>
+        <module>omod</module>
+    </modules>
+
+    <repositories>
+        <repository>
+            <id>openmrs-repo</id>
+            <name>OpenMRS Nexus Repository</name>
+            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <name>Maven Repository Switchboard</name>
+            <layout>default</layout>
+            <url>http://repo1.maven.org/maven2</url>
+        </repository>
+    </repositories>
+    <pluginRepositories>
+        <pluginRepository>
+            <id>openmrs-repo</id>
+            <name>OpenMRS Nexus Repository</name>
+            <url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </pluginRepository>
+    </pluginRepositories>
+    <properties>
+        <openmrsPlatformVersion>1.9.11</openmrsPlatformVersion>
+    </properties>
+    
+    
+    <build>
+        <defaultGoal>install</defaultGoal>
+    </build>
+    
+    
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.openmrs</groupId>
+                <artifactId>event-api</artifactId>
+                <version>2.3</version>
+                <type>jar</type>
+                <scope>provided</scope>
+            </dependency>  
+            
+            <dependency>
+                <groupId>com.google.code.gson</groupId>
+                <artifactId>gson</artifactId>
+                <version>2.8.5</version>
+            </dependency>  
+            
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.9.8</version>
+            </dependency>    
+        </dependencies>
+    </dependencyManagement>          
+                        
+</project>
