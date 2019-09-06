@@ -24,6 +24,7 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import org.apache.commons.codec.base64.Base64;
+import org.openmrs.Encounter;
 import org.openmrs.User;
 import org.openmrs.api.UserService;
 
@@ -34,12 +35,18 @@ public class Tunnel {
 	
 	private Patient patient;
 	
+	private Encounter encounter;
+	
 	private AdministrationService adminService;
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	public Tunnel(Patient patient) {
 		this.patient = patient;
+	}
+	
+	public Tunnel(Encounter encounter) {
+		this.encounter = encounter;
 	}
 	
 	public Patient getPatient() {
@@ -52,8 +59,8 @@ public class Tunnel {
 	
 	public void send() {
 		
-		if (this.patient == null) {
-			log.info("[info]------ Got null as patien, process stopped");
+		if (this.encounter == null) {
+			log.info("[info]------ Got null as encounter, process stopped");
 			return;
 		}
 		
@@ -78,39 +85,50 @@ public class Tunnel {
 			return;
 		}
 		
-		final String openmrsPatientUrlBase = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_PATIENT_BASE);
-		if (openmrsPatientUrlBase == null || openmrsPatientUrlBase.isEmpty()) {
-			log.error("[error]------ Openmrs patient url base is not defined on administration settings.");
+		final String openmrsHost = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_HOST);
+		if (openmrsHost == null || openmrsHost.isEmpty()) {
+			log.error("[error]------ Openmrs host is not defined on administration settings.");
 			return;
 		}
 		
-		final String openmrsPatientUrlBaseUser = adminService
-		        .getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_PATIENT_BASE_USER);
-		if (openmrsPatientUrlBaseUser == null || openmrsPatientUrlBaseUser.isEmpty()) {
-			log.error("[error]------ Openmrs patient url base user name is not defined on administration settings.");
+		final String openmrsUser = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_USER_NAME);
+		if (openmrsUser == null || openmrsUser.isEmpty()) {
+			log.error("[error]------ Openmrs user name is not defined on administration settings.");
 			return;
 		}
 		
-		final String openmrsPatientUrlBasePwd = adminService
-		        .getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_PATIENT_BASE_PWD);
-		if (openmrsPatientUrlBasePwd == null || openmrsPatientUrlBasePwd.isEmpty()) {
-			log.error("[error]------ Openmrs patient url base user password is not defined on administration settings.");
+		final String openmrsUserPwd = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_USER_PWD);
+		if (openmrsUserPwd == null || openmrsUserPwd.isEmpty()) {
+			log.error("[error]------ Openmrs user password is not defined on administration settings.");
+			return;
+		}
+		
+		final String openmrsForms = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_FORMS);
+		if (openmrsForms == null || openmrsForms.isEmpty()) {
+			log.error("[error]------ Openmrs post to openhim forms are not defined on administration settings.");
+			return;
+		}
+		
+		if (openmrsForms.trim().toUpperCase().contains(this.encounter.getForm().getName().trim().toUpperCase()) == false) {
+			log.error("[error]------ this form is not concerned by the post to openhim module ...");
 			return;
 		}
 		
 		try {
-			log.info("[info]------ Preparing to get json from " + openmrsPatientUrlBase + patient.getUuid());
-			boolean useHttps = openmrsPatientUrlBase.substring(0, 4).toUpperCase().equals("https".toUpperCase());
+			
+			boolean useHttps = openmrsHost.substring(0, 4).toUpperCase().equals("https".toUpperCase());
 			HttpURLConnection HttpCon = null;
 			HttpsURLConnection HttpsCon = null;
 			int responseCode = 0;
-			String UrlBaseUserpass = openmrsPatientUrlBaseUser + ":" + openmrsPatientUrlBasePwd;
+			String UrlBaseUserpass = openmrsUser + ":" + openmrsUserPwd;
 			String OpenhimUserpass = openhimUser + ":" + openhimPwd;
 			String UrlBaseBasicAuth = "Basic " + new String(Base64.encode(UrlBaseUserpass.getBytes()));
 			String OpenhimBasicAuth = "Basic " + new String(Base64.encode(OpenhimUserpass.getBytes()));
 			
+			log.info("[info]------ Preparing to get encounter json from " + openmrsHost + "/openmrs/ws/rest/v1/encounter/"
+			        + this.encounter.getUuid());
 			//Get json format with openmrs ws rest service
-			String url = openmrsPatientUrlBase + patient.getUuid();
+			String url = openmrsHost + "/openmrs/ws/rest/v1/encounter/" + this.encounter.getUuid();
 			URL obj = new URL(url);
 			
 			if (useHttps == true) {
@@ -118,6 +136,7 @@ public class Tunnel {
 				HttpsCon.setRequestMethod("GET");
 				HttpsCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
 			} else {
+				
 				HttpCon = (HttpURLConnection) obj.openConnection();
 				HttpCon.setRequestMethod("GET");
 				HttpCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
@@ -138,11 +157,48 @@ public class Tunnel {
 				response.append(inputLine);
 			}
 			in.close();
-			log.error("[info]------got json response " + response.toString());
-			String jsonString = response.toString();
-			byte[] input = jsonString.getBytes("utf-8");
+			
+			log.error("[info]------got encounter json response " + response.toString());
+			String encounterJsonString = response.toString();
+			
+			log.info("[info]------ Preparing to get patient json from " + openmrsHost + "/openmrs/ws/rest/v1/patient/"
+			        + this.encounter.getPatient().getUuid());
+			//Get json format with openmrs ws rest service
+			url = openmrsHost + "/openmrs/ws/rest/v1/patient/" + this.encounter.getPatient().getUuid();
+			obj = new URL(url);
+			
+			if (useHttps == true) {
+				HttpsCon = (HttpsURLConnection) obj.openConnection();
+				HttpsCon.setRequestMethod("GET");
+				HttpsCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
+			} else {
+				
+				HttpCon = (HttpURLConnection) obj.openConnection();
+				HttpCon.setRequestMethod("GET");
+				HttpCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
+			}
+			
+			if (useHttps == true) {
+				responseCode = HttpsCon.getResponseCode();
+				in = new BufferedReader(new InputStreamReader(HttpsCon.getInputStream()));
+			} else {
+				responseCode = HttpCon.getResponseCode();
+				in = new BufferedReader(new InputStreamReader(HttpCon.getInputStream()));
+			}
+			
+			response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			String patientJsonString = response.toString();
+			String jsonTosend = "{\"patient\" :" + patientJsonString + ",\"encounter\" :" + encounterJsonString + "}";
+			
+			log.error("[info]------ json response " + jsonTosend.toString());
 			
 			//Post to OpenHim
+			byte[] input = jsonTosend.getBytes("utf-8");
 			try {
 				log.info("[info]------ Preparing to post json to " + openhimUrl);
 				useHttps = openhimUrl.substring(0, 4).toUpperCase().equals("https".toUpperCase());
@@ -179,7 +235,7 @@ public class Tunnel {
 					newResponse.append(responseLine.trim());
 				}
 				
-				log.info("[info]------end of process " + newResponse.toString());
+				log.info("[info]------end of process ");
 			}
 			catch (Exception ex) {
 				log.error("[error]------process aborted, " + ex.toString());

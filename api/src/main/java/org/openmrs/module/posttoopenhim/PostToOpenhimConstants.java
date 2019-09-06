@@ -26,10 +26,12 @@ public final class PostToOpenhimConstants {
 	
 	public static final String GP_OPENHIM_PWD = "posttoopenhim.openhim.pwd";
 	
-	public static String GP_OPENMRS_PATIENT_BASE = "posttoopenhim.openmrs.patientUrlBase";
+	public static String GP_OPENMRS_HOST = "posttoopenhim.openmrs.host";
 	
-	public static String GP_OPENMRS_PATIENT_BASE_USER = "posttoopenhim.openmrs.patientUrlBaseUser";
+	public static String GP_OPENMRS_USER_NAME = "posttoopenhim.openmrs.user";
 	
-	public static String GP_OPENMRS_PATIENT_BASE_PWD = "posttoopenhim.openmrs.patientUrlBasePwd";
+	public static String GP_OPENMRS_USER_PWD = "posttoopenhim.openmrs.pwd";
+	
+	public static String GP_OPENMRS_FORMS = "posttoopenhim.openmrs.forms";
 	
 }

@@ -1,6 +1,6 @@
 package org.openmrs.module.posttoopenhim.api.impl;
 
-import org.openmrs.Patient;
+import org.openmrs.Encounter;
 import org.openmrs.event.Event;
 
 import javax.jms.Message;
@@ -14,13 +14,13 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.posttoopenhim.api.Tunnel;
 
 /**
- * This class listens for patient UPDATED events. If MPI is enabled it updates patient in MPI.
+ * This class listens for Encounter UPDATED events. If MPI is enabled it updates Encounter in MPI.
  */
-public class PatientUpdatedListener extends PatientActionListener {
+public class EncounterUpdatedListener extends EncounterActionListener {
 	
 	protected final Log log = LogFactory.getLog(this.getClass());
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(PatientUpdatedListener.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(EncounterUpdatedListener.class);
 	
 	/**
 	 * Defines the list of Actions that this subscribable event listener class listens out for.
@@ -34,15 +34,15 @@ public class PatientUpdatedListener extends PatientActionListener {
 	}
 	
 	/**
-	 * Update patient in MPI server.
+	 * Update Encounter in MPI server.
 	 * 
 	 * @param message message with properties.
 	 */
 	@Override
 	public void performAction(Message message) {
-		log.info("[info]------ got an updated patient");
-		Patient patient = extractPatient(message);
-		Tunnel tunnel = new Tunnel(patient);
+		log.info("[info]------ got an updated Encounter");
+		Encounter encounter = extractEncounter(message);
+		Tunnel tunnel = new Tunnel(encounter);
 		tunnel.send();
 		
 	}

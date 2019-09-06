@@ -40,7 +40,7 @@ public class PatientCreatedListener extends PatientActionListener {
 	 * @param message message with properties.
 	 */
 	@Override
-	public void performMpiAction(Message message) {
+	public void performAction(Message message) {
 		log.info("[info]------ a new patient");
 		Patient patient = extractPatient(message);
 		Tunnel tunnel = new Tunnel(patient);

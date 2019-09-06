@@ -6,9 +6,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.OpenmrsObject;
-import org.openmrs.Patient;
 import org.openmrs.api.APIException;
-import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Daemon;
 import org.openmrs.event.Event;
 import org.openmrs.event.SubscribableEventListener;
@@ -17,17 +15,19 @@ import org.openmrs.module.DaemonToken;
 import javax.jms.JMSException;
 import javax.jms.MapMessage;
 import javax.jms.Message;
+import org.openmrs.Encounter;
+import org.openmrs.api.EncounterService;
 
 /**
  * Abstract class for subscribable event listening.
  */
-public abstract class PatientActionListener implements SubscribableEventListener {
+public abstract class EncounterActionListener implements SubscribableEventListener {
 	
 	private final Log log = LogFactory.getLog(this.getClass());
 	
 	protected PostToOpenhimProperties postToOpenhimProperties;
 	
-	protected PatientService patientService;
+	protected EncounterService encounterService;
 	
 	private DaemonToken daemonToken;
 	
@@ -35,8 +35,8 @@ public abstract class PatientActionListener implements SubscribableEventListener
 		this.postToOpenhimProperties = pProperties;
 	}
 	
-	public void setPatientService(PatientService patientService) {
-		this.patientService = patientService;
+	public void setEncounterService(EncounterService encounterService) {
+		this.encounterService = encounterService;
 	}
 	
 	public void setDaemonToken(DaemonToken daemonToken) {
@@ -44,7 +44,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Subscribes for Class - Patient and specified Actions event.
+	 * Subscribes for Class - encounter and specified Actions event.
 	 */
 	public void init() {
 		Event event = new Event();
@@ -59,14 +59,14 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	 */
 	@Override
 	public void onMessage(final Message message) {
-		//		//if (postToOpenhimProperties.isSyncWithDHIS2Enabled()) {
-		//		Daemon.runInDaemonThread(new Runnable() {
-		//			
-		//			@Override
-		//			public void run() {
-		//				performAction(message);
-		//			}
-		//		}, daemonToken);
+		//if (postToOpenhimProperties.isSyncWithDHIS2Enabled()) {
+		Daemon.runInDaemonThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				performAction(message);
+			}
+		}, daemonToken);
 		// }
 	}
 	
@@ -78,7 +78,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	 */
 	public List<Class<? extends OpenmrsObject>> subscribeToObjects() {
 		List objects = new ArrayList<Class<? extends OpenmrsObject>>();
-		objects.add(Patient.class);
+		objects.add(Encounter.class);
 		return objects;
 	}
 	
@@ -97,16 +97,17 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	public abstract void performAction(Message message);
 	
 	/**
-	 * Retrieves the patient from the DB based on PatientUuid in message.
+	 * Retrieves the encounter from the DB based on encounterUuid in message.
 	 * 
 	 * @param message message with properties.
-	 * @return retrieved patient
+	 * @return retrieved encounter
 	 */
-	protected Patient extractPatient(Message message) {
+	protected Encounter extractEncounter(Message message) {
+		
 		validateMessage(message);
 		// Property name referenced from org.openmrs.event.EventEngine.fireEvent(javax.jms.Destination, java.lang.Object)
-		String patientUuid = getMessagePropertyValue(message, "uuid");
-		return getPatient(patientUuid);
+		String encounterUuid = getMessagePropertyValue(message, "uuid");
+		return getEncounter(encounterUuid);
 	}
 	
 	/**
@@ -114,7 +115,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	 * 
 	 * @param message message with property
 	 * @param propertyName name of the property that you want to get the value of
-	 * @return retrieved patient
+	 * @return retrieved encounter
 	 */
 	protected String getMessagePropertyValue(Message message, String propertyName) {
 		validateMessage(message);
@@ -122,7 +123,7 @@ public abstract class PatientActionListener implements SubscribableEventListener
 			return ((MapMessage) message).getString(propertyName);
 		}
 		catch (JMSException e) {
-			throw new APIException("Exception while get uuid of created patient from JMS message. " + e);
+			throw new APIException("Exception while get uuid of created encounter from JMS message. " + e);
 		}
 	}
 	
@@ -138,16 +139,16 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	}
 	
 	/**
-	 * Gets patient from local DB using patient uuid provided.
+	 * Gets encounter from local DB using encounter uuid provided.
 	 * 
-	 * @param patientUuid uuid of patient to be retrieved.
-	 * @return retrieved patient
+	 * @param encounterUuid uuid of encounter to be retrieved.
+	 * @return retrieved encounter
 	 */
-	private Patient getPatient(String patientUuid) {
-		Patient patient = patientService.getPatientByUuid(patientUuid);
-		if (patient == null) {
-			throw new APIException("Unable to retrieve patient by uuid");
+	private Encounter getEncounter(String encoounterUuid) {
+		Encounter encounter = encounterService.getEncounterByUuid(encoounterUuid);
+		if (encounter == null) {
+			throw new APIException("Unable to retrieve encounter by uuid");
 		}
-		return patient;
+		return encounter;
 	}
 }

@@ -35,7 +35,7 @@
                 <property name="personService" ref="personService" />
                 <property name="adminService" ref="adminService" />
                 <property name="locationService" ref="locationService"/>
-                <property name="postToOpenhimProperties" ref="posttoopenhim.coreProperties"/>
+                <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
             </bean>
         </property>
         <property name="preInterceptors">
@@ -48,20 +48,46 @@
    
     
  
+ 
+ 
+ 
+ 
+ 
     
     <bean id="posttoopenhim.patientCreatedListener"
           class="org.openmrs.module.posttoopenhim.api.impl.PatientCreatedListener" init-method="init">
-        <property name="coreProperties" ref="posttoopenhim.coreProperties"/>
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>
 
     <bean id="posttoopenhim.patientUpdatedListener"
           class="org.openmrs.module.posttoopenhim.api.impl.PatientUpdatedListener" init-method="init">
-        <property name="coreProperties" ref="posttoopenhim.coreProperties"/>
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
         <property name="patientService" ref="patientService"/>
     </bean>
     
-    <bean id="posttoopenhim.coreProperties"
+    
+    
+    
+    
+    
+    
+     <bean id="posttoopenhim.encounterCreatedListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.EncounterCreatedListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="encounterService" ref="encounterService"/>
+    </bean>
+
+    <bean id="posttoopenhim.encounterUpdatedListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.EncounterUpdatedListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="encounterService" ref="encounterService"/>
+    </bean>
+    
+    
+    
+    
+    <bean id="posttoopenhim.postToOpenhimProperties"
           class="org.openmrs.module.posttoopenhim.api.impl.PostToOpenhimProperties"/>
 
    
