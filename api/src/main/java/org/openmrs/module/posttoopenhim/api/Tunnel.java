@@ -193,7 +193,42 @@ public class Tunnel {
 			in.close();
 			
 			String patientJsonString = response.toString();
-			String jsonTosend = "{\"patient\" :" + patientJsonString + ",\"encounter\" :" + encounterJsonString + "}";
+			
+			log.info("[info]------ Preparing to get location json from " + openmrsHost + "/openmrs/ws/rest/v1/location/"
+			        + this.encounter.getLocation().getUuid());
+			//Get json format with openmrs ws rest service
+			url = openmrsHost + "/openmrs/ws/rest/v1/location/" + this.encounter.getLocation().getUuid();
+			obj = new URL(url);
+			
+			if (useHttps == true) {
+				HttpsCon = (HttpsURLConnection) obj.openConnection();
+				HttpsCon.setRequestMethod("GET");
+				HttpsCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
+			} else {
+				
+				HttpCon = (HttpURLConnection) obj.openConnection();
+				HttpCon.setRequestMethod("GET");
+				HttpCon.setRequestProperty("Authorization", UrlBaseBasicAuth);
+			}
+			
+			if (useHttps == true) {
+				responseCode = HttpsCon.getResponseCode();
+				in = new BufferedReader(new InputStreamReader(HttpsCon.getInputStream()));
+			} else {
+				responseCode = HttpCon.getResponseCode();
+				in = new BufferedReader(new InputStreamReader(HttpCon.getInputStream()));
+			}
+			
+			response = new StringBuffer();
+			while ((inputLine = in.readLine()) != null) {
+				response.append(inputLine);
+			}
+			in.close();
+			
+			String locationJsonString = response.toString();
+			
+			String jsonTosend = "{\"patient\" :" + patientJsonString + ",\"encounter\" :" + encounterJsonString
+			        + ", \"location\" :" + locationJsonString + "}";
 			
 			log.error("[info]------ json response " + jsonTosend.toString());
 			
