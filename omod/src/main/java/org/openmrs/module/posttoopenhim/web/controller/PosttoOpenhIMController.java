@@ -29,7 +29,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
  * 'module/${rootArtifactid}/${rootArtifactid}Link.form'.
  */
 @Controller("${rootrootArtifactid}.PosttoOpenhIMController")
-@RequestMapping(value = "module/${rootArtifactid}/${rootArtifactid}.form")
 public class PosttoOpenhIMController {
 	
 	/** Logger for this class and subclasses */

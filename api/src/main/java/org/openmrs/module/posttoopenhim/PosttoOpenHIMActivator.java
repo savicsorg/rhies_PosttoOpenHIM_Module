@@ -115,8 +115,9 @@ public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware
 		String openmrsForms = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_FORMS);
 		if (openmrsForms == null || openmrsForms.isEmpty()) {
 			log.error("[error]------ Openmrs post to openhim forms are not defined on administration settings.");
-			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENMRS_FORMS,
-			        "Confidential HIV CRF - SECTION 1: Enrollment Information,Confidential HIV CRF - SECTION II: Follow up Information");
+			gp = new GlobalProperty(
+			        PostToOpenhimConstants.GP_OPENMRS_FORMS,
+			        "HIV CASE-BASED SURVEILLANCE Form - Index testing, partner notification, recency testing information;Confidential HIV CRF - SECTION 1: Enrollment Information;Confidential HIV CRF - SECTION II: Follow up Information");
 			gp.setDescription("Openmrs postToOpenhim forms");
 			adminService.saveGlobalProperty(gp);
 		}
