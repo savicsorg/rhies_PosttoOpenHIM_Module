@@ -126,9 +126,9 @@ public class Tunnel {
 			String OpenhimBasicAuth = "Basic " + new String(Base64.encode(OpenhimUserpass.getBytes()));
 			
 			log.info("[info]------ Preparing to get encounter json from " + openmrsHost + "/openmrs/ws/rest/v1/encounter/"
-			        + this.encounter.getUuid());
+			        + this.encounter.getUuid() + "?v=full");
 			//Get json format with openmrs ws rest service
-			String url = openmrsHost + "/openmrs/ws/rest/v1/encounter/" + this.encounter.getUuid();
+			String url = openmrsHost + "/openmrs/ws/rest/v1/encounter/" + this.encounter.getUuid() + "?v=full";
 			URL obj = new URL(url);
 			
 			if (useHttps == true) {
@@ -162,9 +162,9 @@ public class Tunnel {
 			String encounterJsonString = response.toString();
 			
 			log.info("[info]------ Preparing to get patient json from " + openmrsHost + "/openmrs/ws/rest/v1/patient/"
-			        + this.encounter.getPatient().getUuid());
-			//Get json format with openmrs ws rest service
-			url = openmrsHost + "/openmrs/ws/rest/v1/patient/" + this.encounter.getPatient().getUuid();
+			        + this.encounter.getPatient().getUuid() + "?v=full");
+			//Get json format with openmrs ws rest service 
+			url = openmrsHost + "/openmrs/ws/rest/v1/patient/" + this.encounter.getPatient().getUuid() + "?v=full";
 			obj = new URL(url);
 			
 			if (useHttps == true) {
