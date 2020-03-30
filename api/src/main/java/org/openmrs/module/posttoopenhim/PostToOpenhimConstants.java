@@ -20,11 +20,13 @@ public final class PostToOpenhimConstants {
 	
 	public static final String PATIENT_EDIT_EVENT_TOPIC_NAME = "org.openmrs.module.posttoopenhim.PatientEditEvent";
 	
-	public static final String GP_OPENHIM_URL = "posttoopenhim.openhim.url";
+	public static final String GP_OPENHIM_CONTEXT_URL = "posttoopenhim.openhim.context.url";
 	
-	public static final String GP_OPENHIM_USER = "posttoopenhim.openhim.user";
+	public static final String GP_OPENHIM_PATIENT_URL = "posttoopenhim.openhim.patient.url";
 	
-	public static final String GP_OPENHIM_PWD = "posttoopenhim.openhim.pwd";
+	public static final String GP_OPENHIM_CLIENT_USER = "posttoopenhim.openhim.client.user";
+	
+	public static final String GP_OPENHIM_CLIENT_PWD = "posttoopenhim.openhim.client.pwd";
 	
 	public static String GP_OPENMRS_HOST = "posttoopenhim.openmrs.host";
 	

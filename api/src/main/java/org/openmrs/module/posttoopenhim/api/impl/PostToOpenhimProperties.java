@@ -1,12 +1,9 @@
 package org.openmrs.module.posttoopenhim.api.impl;
 
-import java.util.Properties;
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.posttoopenhim.PostToOpenhimConstants;
 import org.openmrs.module.posttoopenhim.api.ModuleProperties;
-import org.openmrs.util.OpenmrsUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;

@@ -12,7 +12,7 @@
 			Post saved patients and encounters to openHIM
 	</description>
 
-	<activator>org.openmrs.module.posttoopenhim.PosttoOpenHIMActivator</activator>
+	<activator>org.openmrs.module.posttoopenhim.PostToOpenHIMActivator</activator>
 	
 	<!-- <updateURL>https://modules.openmrs.org/modules/download/posttoopenhim/update.rdf</updateURL> -->
 	<!-- /Base Module Properties -->

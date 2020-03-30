@@ -28,7 +28,7 @@ import org.openmrs.module.posttoopenhim.api.impl.PatientActionListener;
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
  */
-public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware {
+public class PostToOpenHIMActivator implements ModuleActivator, DaemonTokenAware {
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
@@ -64,35 +64,43 @@ public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware
 		adminService = Context.getAdministrationService();
 		GlobalProperty gp;
 		
-		String openhimUrl = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_URL);
-		if (openhimUrl == null || openhimUrl.isEmpty()) {
-			log.error("[error]------ Openhim URL is not defined on administration settings.");
-			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_URL, "http://localhost:5001/report/");
-			gp.setDescription("OpenHIM URL");
+		String openhimPatientUrl = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_PATIENT_URL);
+		if (openhimPatientUrl == null || openhimPatientUrl.isEmpty()) {
+			log.error("[error]------ Openhim patient report URL is not defined on administration settings.");
+			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_PATIENT_URL, "http://localhost:5001/patient/");
+			gp.setDescription("OpenHIM patient report URL");
 			adminService.saveGlobalProperty(gp);
 		}
 		
-		String openhimUser = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_USER);
-		if (openhimUser == null || openhimUser.isEmpty()) {
-			log.error("[error]------ Openhim user name is not defined on administration settings.");
-			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_USER, "openmrs");
-			gp.setDescription("OpenHIM openmrs client User");
+		String openhimContextUrl = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CONTEXT_URL);
+		if (openhimContextUrl == null || openhimContextUrl.isEmpty()) {
+			log.error("[error]------ Openhim context report URL is not defined on administration settings.");
+			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CONTEXT_URL, "http://localhost:5001/context/");
+			gp.setDescription("OpenHIM context report URL");
 			adminService.saveGlobalProperty(gp);
 		}
 		
-		String openhimPwd = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_PWD);
+		String openhimClientUser = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CLIENT_USER);
+		if (openhimClientUser == null || openhimClientUser.isEmpty()) {
+			log.error("[error]------ Openhim client ID is not defined on administration settings.");
+			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CLIENT_USER, "openmrs");
+			gp.setDescription("OpenHIM client ID");
+			adminService.saveGlobalProperty(gp);
+		}
+		
+		String openhimPwd = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CLIENT_PWD);
 		if (openhimPwd == null || openhimPwd.isEmpty()) {
-			log.error("[error]------ Openhim user password is not defined on administration settings.");
-			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_PWD, "saviors");
-			gp.setDescription("OpenHIM openmrs client User password");
+			log.error("[error]------ Openhim client Basic Auth Password is not defined on administration settings.");
+			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENHIM_CLIENT_PWD, "saviors");
+			gp.setDescription("OpenHIM openmrs client Basic Auth Password");
 			adminService.saveGlobalProperty(gp);
 		}
 		
 		String openmrsHost = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_HOST);
 		if (openmrsHost == null || openmrsHost.isEmpty()) {
 			log.error("[error]------ Openmrs host is not defined on administration settings.");
-			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENMRS_HOST, "http://localhost:8080/");
-			gp.setDescription("OpenHIM Openmrs host (ex: http://localhost:8080/)");
+			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENMRS_HOST, "http://openmrs-tomcat:8080/");
+			gp.setDescription("OpenHIM current Openmrs host, accesseible from openHim core (ex: http://openmrs-tomcat:8080/)");
 			adminService.saveGlobalProperty(gp);
 		}
 		
@@ -100,7 +108,7 @@ public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware
 		if (openmrsUser == null || openmrsUser.isEmpty()) {
 			log.error("[error]------ Openmrs user name is not defined on administration settings.");
 			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENMRS_USER_NAME, "savior");
-			gp.setDescription("Openmrs PostToOpenhim user name");
+			gp.setDescription("Openmrs user name");
 			adminService.saveGlobalProperty(gp);
 		}
 		
@@ -108,7 +116,7 @@ public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware
 		if (openmrsUserPwd == null || openmrsUserPwd.isEmpty()) {
 			log.error("[error]------ Openmrs user pwd is not defined on administration settings.");
 			gp = new GlobalProperty(PostToOpenhimConstants.GP_OPENMRS_USER_PWD, "savior1nAction");
-			gp.setDescription("Openmrs postToOpenhim user password");
+			gp.setDescription("Openmrs user password");
 			adminService.saveGlobalProperty(gp);
 		}
 		
@@ -118,7 +126,7 @@ public class PosttoOpenHIMActivator implements ModuleActivator, DaemonTokenAware
 			gp = new GlobalProperty(
 			        PostToOpenhimConstants.GP_OPENMRS_FORMS,
 			        "HIV CASE-BASED SURVEILLANCE Form - Index testing, partner notification, recency testing information;Confidential HIV CRF - SECTION 1: Enrollment Information;Confidential HIV CRF - SECTION II: Follow up Information");
-			gp.setDescription("Openmrs postToOpenhim forms");
+			gp.setDescription("Openmrs postToOpenhim forms (Use ':' as seperator)");
 			adminService.saveGlobalProperty(gp);
 		}
 		
