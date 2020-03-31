@@ -59,14 +59,15 @@ public abstract class PatientActionListener implements SubscribableEventListener
 	 */
 	@Override
 	public void onMessage(final Message message) {
-		//		//if (postToOpenhimProperties.isSyncWithDHIS2Enabled()) {
-		//		Daemon.runInDaemonThread(new Runnable() {
-		//			
-		//			@Override
-		//			public void run() {
-		//				performAction(message);
-		//			}
-		//		}, daemonToken);
+		//if (postToOpenhimProperties.isSyncWithDHIS2Enabled()) {
+		Daemon.runInDaemonThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				log.info("[info]------ subscribed Encounter creation event...");
+				performAction(message);
+			}
+		}, daemonToken);
 		// }
 	}
 	

@@ -64,6 +64,7 @@ public abstract class EncounterActionListener implements SubscribableEventListen
 			
 			@Override
 			public void run() {
+				log.info("[o]------ subscribed Encounter creation event...");
 				performAction(message);
 			}
 		}, daemonToken);

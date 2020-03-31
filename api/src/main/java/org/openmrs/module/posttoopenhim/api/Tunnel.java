@@ -42,10 +42,12 @@ public class Tunnel {
 	private Log log = LogFactory.getLog(this.getClass());
 	
 	public Tunnel(Patient patient) {
+		log.info("----------0");
 		this.patient = patient;
 	}
 	
 	public Tunnel(Encounter encounter) {
+		log.info("----------01");
 		this.encounter = encounter;
 	}
 	
@@ -58,6 +60,8 @@ public class Tunnel {
 	}
 	
 	public void send() {
+		
+		log.info("----------1");
 		
 		if (this.encounter == null && this.patient == null) {
 			log.info("[info]------ Got null as encounter and null as patient, process stopped");
@@ -384,8 +388,8 @@ public class Tunnel {
 			}
 			
 		}
-		catch (Exception ex) {
-			log.error("[error]------process aborted, " + ex.toString());
+		catch (Exception ex1) {
+			log.error("[er/ror]------process aborted, " + ex1.toString());
 		}
 		
 	}

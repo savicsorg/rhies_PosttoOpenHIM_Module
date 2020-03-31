@@ -28,6 +28,7 @@ public class PatientUpdatedListener extends PatientActionListener {
 	 * @return a list of Actions this listener can deal with
 	 */
 	public List<String> subscribeToActions() {
+		log.info("[info]------ subscribed Patient update event...");
 		List actions = new ArrayList<String>();
 		actions.add(Event.Action.UPDATED.name());
 		return actions;
