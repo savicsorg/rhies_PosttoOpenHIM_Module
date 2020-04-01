@@ -44,7 +44,7 @@ public class PatientCreatedListener extends PatientActionListener {
 	public void performAction(Message message) {
 		log.info("[info]------ a new patient");
 		Patient patient = extractPatient(message);
-		Tunnel tunnel = new Tunnel(patient);
+		Tunnel tunnel = new Tunnel(patient, Event.Action.CREATED.name());
 		tunnel.send();
 	}
 	

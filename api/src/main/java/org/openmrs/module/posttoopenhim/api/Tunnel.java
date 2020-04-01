@@ -35,20 +35,22 @@ public class Tunnel {
 	
 	private Patient patient;
 	
+	private String operation;
+	
 	private Encounter encounter;
 	
 	private AdministrationService adminService;
 	
 	private Log log = LogFactory.getLog(this.getClass());
 	
-	public Tunnel(Patient patient) {
-		log.info("----------0");
+	public Tunnel(Patient patient, String operation) {
 		this.patient = patient;
+		this.operation = operation;
 	}
 	
-	public Tunnel(Encounter encounter) {
-		log.info("----------01");
+	public Tunnel(Encounter encounter, String operation) {
 		this.encounter = encounter;
+		this.operation = operation;
 	}
 	
 	public Patient getPatient() {
@@ -60,11 +62,8 @@ public class Tunnel {
 	}
 	
 	public void send() {
-		
-		log.info("----------1");
-		
 		if (this.encounter == null && this.patient == null) {
-			log.info("[info]------ Got null as encounter and null as patient, process stopped");
+			log.error("[info]------ Got null as encounter and null as patient, process stopped");
 			return;
 		}
 		
@@ -115,7 +114,7 @@ public class Tunnel {
 		}
 		
 		final String openmrsForms = adminService.getGlobalProperty(PostToOpenhimConstants.GP_OPENMRS_FORMS);
-		if (openmrsForms == null || openmrsForms.isEmpty()) {
+		if (this.encounter != null && (openmrsForms == null || openmrsForms.isEmpty())) {
 			log.error("[error]------ Openmrs post to openhim forms are not defined on administration settings.");
 			return;
 		}
@@ -128,7 +127,7 @@ public class Tunnel {
 		
 		try {
 			
-			if (this.encounter == null) {
+			if (this.encounter != null) {
 				log.info("[info]------ Preparing to send Encounter");
 				
 				boolean useHttps = openmrsHost.substring(0, 4).toUpperCase().equals("https".toUpperCase());
@@ -173,7 +172,7 @@ public class Tunnel {
 				}
 				in.close();
 				
-				log.error("[info]------got encounter json response " + response.toString());
+				log.info("[info]------got encounter json response " + response.toString());
 				String encounterJsonString = response.toString();
 				
 				log.info("[info]------ Preparing to get patient json from " + openmrsHost + "/openmrs/ws/rest/v1/patient/"
@@ -243,9 +242,9 @@ public class Tunnel {
 				String locationJsonString = response.toString();
 				
 				String jsonTosend = "{\"patient\" :" + patientJsonString + ",\"encounter\" :" + encounterJsonString
-				        + ", \"location\" :" + locationJsonString + "}";
+				        + ", \"location\" :" + locationJsonString + ", \"operation\" :" + this.operation + "}";
 				
-				log.error("[info]------ json response " + jsonTosend.toString());
+				log.info("[info]------ json response " + jsonTosend.toString());
 				
 				//Post to OpenHim
 				byte[] input = jsonTosend.getBytes("utf-8");
@@ -285,16 +284,15 @@ public class Tunnel {
 						newResponse.append(responseLine.trim());
 					}
 					
-					log.info("[info]------end of process ");
+					log.error("[info]------end of process ");
 				}
 				catch (Exception ex) {
 					log.error("[error]------process aborted, " + ex.toString());
 				}
 			}
 			
-			if (this.patient == null) {
+			if (this.patient != null) {
 				log.info("[info]------ Preparing to send Patient");
-				
 				boolean useHttps = openmrsHost.substring(0, 4).toUpperCase().equals("https".toUpperCase());
 				HttpURLConnection HttpCon = null;
 				HttpsURLConnection HttpsCon = null;
@@ -305,13 +303,11 @@ public class Tunnel {
 				String OpenhimBasicAuth = "Basic " + new String(Base64.encode(OpenhimUserpass.getBytes()));
 				
 				//Get json format with openmrs ws rest service 
-				String url = openmrsHost + "/openmrs/ws/rest/v1/patient/" + this.encounter.getPatient().getUuid()
-				        + "?v=full";
+				String url = openmrsHost + "/openmrs/ws/rest/v1/patient/" + this.getPatient().getUuid() + "?v=full";
 				URL obj = new URL(url);
 				String inputLine;
 				BufferedReader in;
 				StringBuffer response = new StringBuffer();
-				
 				if (useHttps == true) {
 					HttpsCon = (HttpsURLConnection) obj.openConnection();
 					HttpsCon.setRequestMethod("GET");
@@ -336,19 +332,19 @@ public class Tunnel {
 					response.append(inputLine);
 				}
 				in.close();
+				log.info("[info]------got patient json response " + response.toString());
 				
 				String patientJsonString = response.toString();
-				String jsonTosend = "patient\" :" + patientJsonString;
-				
-				log.error("[info]------ json response " + jsonTosend.toString());
+				String jsonTosend = "{\"patient\" :" + patientJsonString + ", \"operation\" :" + this.operation + "}";
+				log.info("[info]------ json response " + jsonTosend.toString());
 				
 				//Post to OpenHim
 				byte[] input = jsonTosend.getBytes("utf-8");
 				try {
-					log.info("[info]------ Preparing to post json to " + openhimContextUrl);
-					useHttps = openhimContextUrl.substring(0, 4).toUpperCase().equals("https".toUpperCase());
+					log.info("[info]------ Preparing to post json to " + openhimPatientUrl);
+					useHttps = openhimPatientUrl.substring(0, 4).toUpperCase().equals("https".toUpperCase());
 					
-					obj = new URL(openhimContextUrl);
+					obj = new URL(openhimPatientUrl);
 					if (useHttps == true) {
 						HttpsCon = (HttpsURLConnection) obj.openConnection();
 						HttpsCon.setRequestMethod("POST");
@@ -388,8 +384,8 @@ public class Tunnel {
 			}
 			
 		}
-		catch (Exception ex1) {
-			log.error("[er/ror]------process aborted, " + ex1.toString());
+		catch (Exception ex) {
+			log.error("[error]------process aborted, " + ex.toString());
 		}
 		
 	}

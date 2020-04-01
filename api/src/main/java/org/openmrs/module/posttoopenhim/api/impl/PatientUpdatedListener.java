@@ -43,7 +43,7 @@ public class PatientUpdatedListener extends PatientActionListener {
 	public void performAction(Message message) {
 		log.info("[info]------ got an updated patient");
 		Patient patient = extractPatient(message);
-		Tunnel tunnel = new Tunnel(patient);
+		Tunnel tunnel = new Tunnel(patient, Event.Action.UPDATED.name());
 		tunnel.send();
 		
 	}

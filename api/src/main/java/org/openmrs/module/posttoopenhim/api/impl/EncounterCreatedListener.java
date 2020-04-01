@@ -45,7 +45,7 @@ public class EncounterCreatedListener extends EncounterActionListener {
 	public void performAction(Message message) {
 		log.info("[info]------ a new Encounter");
 		Encounter encounter = extractEncounter(message);
-		Tunnel tunnel = new Tunnel(encounter);
+		Tunnel tunnel = new Tunnel(encounter, Event.Action.CREATED.name());
 		tunnel.send();
 	}
 	

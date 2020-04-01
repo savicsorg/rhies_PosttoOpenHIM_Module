@@ -66,13 +66,44 @@
         <property name="patientService" ref="patientService"/>
     </bean>
     
+    <bean id="posttoopenhim.patientVoidedListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.PatientVoidedListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+    
+    <bean id="posttoopenhim.patientUnVoidedListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.PatientUnVoidedListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+    
+    <bean id="posttoopenhim.patientRetiredListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.PatientRetiredListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+    
+    
+    <bean id="posttoopenhim.patientUnRetiredListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.PatientUnRetiredListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
+    
+    <bean id="posttoopenhim.patientPurgedListener"
+          class="org.openmrs.module.posttoopenhim.api.impl.PatientPurgedListener" init-method="init">
+        <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
+        <property name="patientService" ref="patientService"/>
+    </bean>
     
     
     
     
     
     
-     <bean id="posttoopenhim.encounterCreatedListener"
+    
+    <bean id="posttoopenhim.encounterCreatedListener"
           class="org.openmrs.module.posttoopenhim.api.impl.EncounterCreatedListener" init-method="init">
         <property name="postToOpenhimProperties" ref="posttoopenhim.postToOpenhimProperties"/>
         <property name="encounterService" ref="encounterService"/>
