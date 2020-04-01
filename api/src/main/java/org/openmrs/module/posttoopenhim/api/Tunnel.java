@@ -242,7 +242,7 @@ public class Tunnel {
 				String locationJsonString = response.toString();
 				
 				String jsonTosend = "{\"patient\" :" + patientJsonString + ",\"encounter\" :" + encounterJsonString
-				        + ", \"location\" :" + locationJsonString + ", \"operation\" :" + this.operation + "}";
+				        + ", \"location\" :" + locationJsonString + ", \"operation\" : \"" + this.operation + "\" }";
 				
 				log.info("[info]------ json response " + jsonTosend.toString());
 				
@@ -335,7 +335,7 @@ public class Tunnel {
 				log.info("[info]------got patient json response " + response.toString());
 				
 				String patientJsonString = response.toString();
-				String jsonTosend = "{\"patient\" :" + patientJsonString + ", \"operation\" :" + this.operation + "}";
+				String jsonTosend = "{\"patient\" :" + patientJsonString + ", \"operation\" : \"" + this.operation + "\" }";
 				log.info("[info]------ json response " + jsonTosend.toString());
 				
 				//Post to OpenHim
