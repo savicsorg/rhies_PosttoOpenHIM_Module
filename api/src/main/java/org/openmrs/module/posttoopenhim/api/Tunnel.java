@@ -15,18 +15,11 @@ import org.openmrs.module.posttoopenhim.PostToOpenhimConstants;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.net.Authenticator;
-import java.net.CookieHandler;
-import java.net.CookieManager;
-import java.net.CookiePolicy;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import javax.net.ssl.HttpsURLConnection;
 import org.apache.commons.codec.base64.Base64;
 import org.openmrs.Encounter;
-import org.openmrs.User;
-import org.openmrs.api.UserService;
 
 /**
  * @author gilbertagbodamakou
@@ -335,7 +328,10 @@ public class Tunnel {
 				log.info("[info]------got patient json response " + response.toString());
 				
 				String patientJsonString = response.toString();
-				String jsonTosend = "{\"patient\" :" + patientJsonString + ", \"operation\" : \"" + this.operation + "\" }";
+				String jsonTosend = "{\"patient\" :" + patientJsonString + ", \"operation\" : \"" + this.operation + "\""
+				        + ",\"location\": \"" + Context.getLocationService().getDefaultLocation().getDescription() + "\""
+				        + "}";
+				
 				log.info("[info]------ json response " + jsonTosend.toString());
 				
 				//Post to OpenHim
