@@ -1,9 +1,15 @@
-${moduleName}
+RHIES Post to OpenHIM
 ==========================
 
 Description
 -----------
-This is a very basic module which can be used as a starting point in creating a new module.
+This is an OpenMRS 1.9.11 module used to post OpenMRS Patients and context informations to a specifific OpenHim mediator 
+
+Dependencies
+--------------------
+This module depnds on:
+- The OpenMRS Event module
+- The OpenMRS Web Rest service
 
 Building from Source
 --------------------
