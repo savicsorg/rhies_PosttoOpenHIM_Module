@@ -7,7 +7,7 @@ This is an OpenMRS 1.9.11 module used to post OpenMRS Patients and context infor
 
 Dependencies
 --------------------
-This module depnds on:
+This module depends on:
 - The OpenMRS Event module
 - The OpenMRS Web Rest service
 
@@ -31,6 +31,6 @@ Installation
 2. Use the OpenMRS Administration > Manage Modules screen to upload and install the .omod file.
 
 If uploads are not allowed from the web (changable via a runtime property), you can drop the omod
-into the ~/.OpenMRS/modules folder.  (Where ~/.OpenMRS is assumed to be the Application 
-Data Directory that the running openmrs is currently using.)  After putting the file in there 
+into the ~/.OpenMRS/modules folder (Where ~/.OpenMRS is assumed to be the Application 
+Data Directory that the running OpenMRS is currently using).  After putting the file in there 
 simply restart OpenMRS/tomcat and the module will be loaded and started.
