@@ -1,18 +1,15 @@
-RHIES Post to OpenHIM
-==========================
+# rhies_PosttoOpenHIM_Module
+This repository contains an OpenMRS module allowing to post Patients and Encounters to OpenHIM developed for the RHIES project. To be specific, it is an OpenMRS 1.9.11 module used to post OpenMRS Patients and context informations to a specifific OpenHIM mediator.
 
-Description
------------
-This is an OpenMRS 1.9.11 module used to post OpenMRS Patients and context informations to a specifific OpenHim mediator 
+## RHIES Project
+The purpose of Rwandan Health Information Exchange System (RHIES) project is to develop a system that allows for information- exchange within electronic medical record systems and to develop linkage solutions for generating EMR data directly to HMIS in the specific use case of HIV Case based surveillance (CBS). RHIES is a set of applications that work together in the Open Health Information Exchange (OpenHIE) architecture to serve point-of-service systems, like EMRs, DHIS2, National ID database and laboratory information system.
 
-Dependencies
---------------------
+## Dependencies
 This module depends on:
 - The OpenMRS Event module
 - The OpenMRS Web Rest service
 
-Building from Source
---------------------
+## Building from Source
 You will need to have Java 1.6+ and Maven 2.x+ installed.  Use the command 'mvn package' to 
 compile and package the module.  The .omod file will be in the omod/target folder.
 
@@ -25,8 +22,7 @@ It will allow you to deploy any changes to your web
 resources such as jsp or js files without re-installing the module. The deploy path says 
 where OpenMRS is deployed.
 
-Installation
-------------
+## Installation
 1. Build the module to produce the .omod file.
 2. Use the OpenMRS Administration > Manage Modules screen to upload and install the .omod file.
 
@@ -34,3 +30,18 @@ If uploads are not allowed from the web (changable via a runtime property), you 
 into the ~/.OpenMRS/modules folder (Where ~/.OpenMRS is assumed to be the Application 
 Data Directory that the running OpenMRS is currently using).  After putting the file in there 
 simply restart OpenMRS/tomcat and the module will be loaded and started.
+
+## Documentation
+[Wiki](https://github.com/savicsorg/rhies_PosttoOpenHIM_Module/wiki)
+
+## Licence
+Proprietary.
+
+## Created and Developed By
+[Savics SRL](https://savics.org)
+
+## In Collaboration with
+[Rwanda Biomedical Centre (RBC)](https://www.rbc.gov.rw/)
+
+## Main Contributors
+* Developers: Gilbert AGBODAMKOU
