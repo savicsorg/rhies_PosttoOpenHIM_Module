@@ -34,8 +34,8 @@ simply restart OpenMRS/tomcat and the module will be loaded and started.
 ## Documentation
 [Wiki](https://github.com/savicsorg/rhies_PosttoOpenHIM_Module/wiki)
 
-## Licence
-Proprietary.
+## License
+Mozilla Public License 2.0
 
 ## Created and Developed By
 [Savics SRL](https://savics.org)
